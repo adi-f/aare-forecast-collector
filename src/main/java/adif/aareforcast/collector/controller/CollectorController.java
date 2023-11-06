@@ -5,8 +5,10 @@ import adif.aareforcast.collector.model.AareGuruEntry;
 import adif.aareforcast.collector.model.Location;
 import adif.aareforcast.collector.model.Metadata;
 import adif.aareforcast.collector.service.AareGuruEntryService;
+import adif.aareforcast.collector.service.AareGuruEntryService.PollingStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,9 +27,14 @@ public class CollectorController {
     return "pong";
   }
 
-  @GetMapping("aare-guru")
-  public AareGuruEntry readAareguru(Location location) {
+  @GetMapping("aare-guru/{location}")
+  public AareGuruEntry readAareguru(@PathVariable Location location) {
     return aareGuruIntegrationService.readCurrent(location);
+  }
+
+  @GetMapping("aare-guru/{location}/poll")
+  public PollingStatus poll(@PathVariable Location location) {
+    return aareGuruEntryService.poll(location);
   }
 
   @GetMapping("metadata")

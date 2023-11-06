@@ -1,5 +1,21 @@
 CREATE TABLE aare_guru_entry
 (
-    id        INT IDENTITY PRIMARY KEY,
-    timestamp datetime
+    id        BIGINT IDENTITY PRIMARY KEY,
+    location  VARCHAR(20),
+    timestamp BIGINT,
+    current_water_temperature_celsius FLOAT(24),
+    current_flow_cube_meters_per_second INT,
+    forecast2h_water_temperature_celsius FLOAT(24),
+    timestamp_current_weather BIGINT,
+    current_air_temperature_celsius FLOAT(24),
+    current_rainfall_mm_per10nin FLOAT(24),
+
+    weather_forecast_tomorrow_timestamp BIGINT,
+    weather_forecast_tomorrow_symbol VARCHAR(20),
+    weather_forecast_tomorrow_day_max_air_temperature_celsius INT,
+    weather_forecast_tomorrow_day_min_air_temperature_celsius INT,
+    weather_forecast_tomorrow_rainfall_mm_per10nin INT,
+    weather_forecast_tomorrow_rain_risk_percentage INT,
+
+
 );

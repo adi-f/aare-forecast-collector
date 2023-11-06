@@ -8,7 +8,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class AareGuruIntegrationService implements InitializingBean {
@@ -34,12 +34,12 @@ public class AareGuruIntegrationService implements InitializingBean {
     // Swagger: https://aareguru.existenz.ch/openapi/#/
     List<Field<?>> fields = new ArrayList<>();
     fields.add(field("aare.timestamp", P::parseInstant, AareGuruEntryBuilder::timestamp)); // timestamp UTC in seconds
-    fields.add(field("aare.temperature_prec", P::parseFload, AareGuruEntryBuilder::currentWaterTemperatureCelsius)); // current water temperature °C; floating-point
+    fields.add(field("aare.temperature_prec", P::parseFloat, AareGuruEntryBuilder::currentWaterTemperatureCelsius)); // current water temperature °C; floating-point
     fields.add(field("aare.flow", P::parseInteger, AareGuruEntryBuilder::currentFlowCubeMetersPerSecond)); // current flow, m³/s, integer
-    fields.add(field("aare.forecast2h", P::parseInteger, AareGuruEntryBuilder::forecast2hFlowCubeMetersPerSecond)); // flow+2h, m³/s, integer
+    fields.add(field("aare.forecast2h", P::parseFloat, AareGuruEntryBuilder::forecast2hWaterTemperatureCelsius)); // forecast+2h water temperature in °C; floating-point
     fields.add(field("weather.current.timestamp", P::parseInstant, AareGuruEntryBuilder::timestampCurrentWeather)); // timestamp UTC in seconds
-    fields.add(field("weather.current.tt", P::parseFload, AareGuruEntryBuilder::currentAirTemperatureCelsius)); // current air temperature °C; floating-point
-    fields.add(field("weather.current.rrreal", P::parseFload, AareGuruEntryBuilder::currentRainfallMmPer10nin)); // current rainfall, mm/10min; floating-point
+    fields.add(field("weather.current.tt", P::parseFloat, AareGuruEntryBuilder::currentAirTemperatureCelsius)); // current air temperature °C; floating-point
+    fields.add(field("weather.current.rrreal", P::parseFloat, AareGuruEntryBuilder::currentRainfallMmPer10nin)); // current rainfall, mm/10min; floating-point
 
     for(int i = 0; i < NUMBER_OF_FORCAST_DAYS; i++) { // 0 = tomorrow
       if(i != 0) throw new RuntimeException("please refactor the DTO-setters below, they are not made yet for looping");
@@ -48,7 +48,7 @@ public class AareGuruIntegrationService implements InitializingBean {
       fields.add(field("weather.forecast." + i + ".tx", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowDayMaxAirTemperatureCelsius)); // max. air temperature of day °C; integer
       fields.add(field("weather.forecast." + i + ".tn", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowDayMinAirTemperatureCelsius)); // min. air temperature of day °C; integer
       fields.add(field("weather.forecast." + i + ".rr", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowRainfallMmPer10nin)); // rainfall, mm/10min; integer
-      fields.add(field("weather.forecast." + i + ".risk", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowRainRiskPercentage)); // probability of rain; percentage; integer
+      fields.add(field("weather.forecast." + i + ".rrisk", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowRainRiskPercentage)); // probability of rain; percentage; integer
     }
     FIELDS_TO_READ = Collections.unmodifiableList(fields);
     FIELDS_QUERY = FIELDS_TO_READ.stream().map(Field::getFielName).collect(Collectors.joining(","));
@@ -68,12 +68,13 @@ public class AareGuruIntegrationService implements InitializingBean {
   }
 
   private String readV2018Current(String city) {
-    return aareGuruRestTemplate.getForObject("/v2018/current", String.class, Map.of(
-        "city", city, //
-        "app", "aare-forcast-ML-trainer", //
-        "version", "1",
-        "values", FIELDS_QUERY
-    ));
+    String path = UriComponentsBuilder.fromPath("/v2018/current")
+        .queryParam("city", city)
+        .queryParam("app", "aare-forcast-ML-trainer")
+        .queryParam("version", "1")
+        .queryParam("values", FIELDS_QUERY)
+        .toUriString();
+    return aareGuruRestTemplate.getForObject(path, String.class);
   }
 
   private AareGuruEntryBuilder parse(String response) {
@@ -114,7 +115,7 @@ public class AareGuruIntegrationService implements InitializingBean {
       return Instant.ofEpochSecond(Long.parseLong(unixTimestamp));
     }
 
-    private static float parseFload(String number) {
+    private static float parseFloat(String number) {
       return Float.parseFloat(number);
     }
 
