@@ -5,7 +5,14 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum Location {
-  BERN("bern");
+  BRIENZ("brienz"),
+  INTERLAKEN("interlaken"),
+  THUN("thun"),
+  BERN("bern"),
+  HAGNECK("hagneck"),
+  BIEL("biel"),
+  OLTEN("olten"),
+  BRUGG("brugg");
 
   @Getter
   private final String city;

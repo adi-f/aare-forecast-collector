@@ -17,3 +17,4 @@ CREATE TABLE aare_guru_entry
     weather_forecast_tomorrow_rainfall_mm_per10nin INT,
     weather_forecast_tomorrow_rain_risk_percentage INT,
 );
+CREATE UNIQUE INDEX agu_ts_loc ON aare_guru_entry(timestamp, location);

@@ -29,7 +29,7 @@ public class AareGuruEntryService {
 //    repository.save(newEntry);
 //    return PollingStatus.NEW;
     AareGuruEntry newEntry = aareGuruIntegrationService.readCurrent(location);
-    boolean alreadyPresent = repository.countByTimestamp(newEntry.getTimestamp()) > 0L;
+    boolean alreadyPresent = repository.countByTimestampAndLocation(newEntry.getTimestamp(), newEntry.getLocation()) > 0L;
     if(alreadyPresent) {
       return PollingStatus.ALREADY_PRESENT;
     } else {
