@@ -23,4 +23,23 @@ public class AareGuruEntryService {
         .build();
   }
 
+  @Transactional
+  public PollingStatus poll(Location location) {
+//    AareGuruEntry newEntry = aareGuruIntegrationService.readCurrent(location);
+//    repository.save(newEntry);
+//    return PollingStatus.NEW;
+    AareGuruEntry newEntry = aareGuruIntegrationService.readCurrent(location);
+    boolean alreadyPresent = repository.countByTimestamp(newEntry.getTimestamp()) > 0L;
+    if(alreadyPresent) {
+      return PollingStatus.ALREADY_PRESENT;
+    } else {
+      repository.save(newEntry);
+      return PollingStatus.NEW;
+    }
+
+  }
+
+  public enum PollingStatus {
+    NEW, ALREADY_PRESENT;
+  }
 }

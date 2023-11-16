@@ -1,6 +1,6 @@
 package adif.aareforcast.collector.model;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.data.annotation.Id;
@@ -12,15 +12,15 @@ public class AareGuruEntry {
   @Id
   Long id;
   Location location;
-  Instant timestamp;
+  OffsetDateTime timestamp;
   Float currentWaterTemperatureCelsius;
   Integer currentFlowCubeMetersPerSecond; // m³/s
-  Integer forecast2hFlowCubeMetersPerSecond; // m³/s
-  Instant timestampCurrentWeather;
+  Float forecast2hWaterTemperatureCelsius;
+  OffsetDateTime timestampCurrentWeather;
   Float currentAirTemperatureCelsius;
   Float currentRainfallMmPer10nin; // mm/10min
 
-  Instant weatherForecastTomorrowTimestamp;
+  OffsetDateTime weatherForecastTomorrowTimestamp;
   WeatherSymbol weatherForecastTomorrowSymbol;
   Integer weatherForecastTomorrowDayMaxAirTemperatureCelsius;
   Integer weatherForecastTomorrowDayMinAirTemperatureCelsius;

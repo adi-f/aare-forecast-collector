@@ -5,6 +5,8 @@ import adif.aareforcast.collector.model.AareGuruEntry.AareGuruEntryBuilder;
 import adif.aareforcast.collector.model.Location;
 import adif.aareforcast.collector.model.WeatherSymbol;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +26,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AareGuruIntegrationService implements InitializingBean {
 
   private static final int NUMBER_OF_FORCAST_DAYS = 1; // max=3 (4 days)
+
+  private static final ZoneId AARE_LOCAL_TIME_ZONE = ZoneId.of("Europe/Zurich");
   private static final List<Field<?>> FIELDS_TO_READ;
   private static final String FIELDS_QUERY;
 
@@ -33,17 +37,17 @@ public class AareGuruIntegrationService implements InitializingBean {
     // Documentation of fields: https://aareguru.existenz.ch/
     // Swagger: https://aareguru.existenz.ch/openapi/#/
     List<Field<?>> fields = new ArrayList<>();
-    fields.add(field("aare.timestamp", P::parseInstant, AareGuruEntryBuilder::timestamp)); // timestamp UTC in seconds
+    fields.add(field("aare.timestamp", P::parseTimestamp, AareGuruEntryBuilder::timestamp)); // timestamp UTC in seconds
     fields.add(field("aare.temperature_prec", P::parseFloat, AareGuruEntryBuilder::currentWaterTemperatureCelsius)); // current water temperature °C; floating-point
     fields.add(field("aare.flow", P::parseInteger, AareGuruEntryBuilder::currentFlowCubeMetersPerSecond)); // current flow, m³/s, integer
     fields.add(field("aare.forecast2h", P::parseFloat, AareGuruEntryBuilder::forecast2hWaterTemperatureCelsius)); // forecast+2h water temperature in °C; floating-point
-    fields.add(field("weather.current.timestamp", P::parseInstant, AareGuruEntryBuilder::timestampCurrentWeather)); // timestamp UTC in seconds
+    fields.add(field("weather.current.timestamp", P::parseTimestamp, AareGuruEntryBuilder::timestampCurrentWeather)); // timestamp UTC in seconds
     fields.add(field("weather.current.tt", P::parseFloat, AareGuruEntryBuilder::currentAirTemperatureCelsius)); // current air temperature °C; floating-point
     fields.add(field("weather.current.rrreal", P::parseFloat, AareGuruEntryBuilder::currentRainfallMmPer10nin)); // current rainfall, mm/10min; floating-point
 
     for(int i = 0; i < NUMBER_OF_FORCAST_DAYS; i++) { // 0 = tomorrow
       if(i != 0) throw new RuntimeException("please refactor the DTO-setters below, they are not made yet for looping");
-      fields.add(field("weather.forecast." + i + ".timestamp", P::parseInstant, AareGuruEntryBuilder::weatherForecastTomorrowTimestamp)); // timestamp UTC in seconds
+      fields.add(field("weather.forecast." + i + ".timestamp", P::parseTimestamp, AareGuruEntryBuilder::weatherForecastTomorrowTimestamp)); // timestamp UTC in seconds
       fields.add(field("weather.forecast." + i + ".symt", P::parseWeatherSymbol, AareGuruEntryBuilder::weatherForecastTomorrowSymbol)); // weather symbol; integer https://meteotest.ch/en/weather-api/wetter-api-dokumentation/weather-symbols
       fields.add(field("weather.forecast." + i + ".tx", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowDayMaxAirTemperatureCelsius)); // max. air temperature of day °C; integer
       fields.add(field("weather.forecast." + i + ".tn", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowDayMinAirTemperatureCelsius)); // min. air temperature of day °C; integer
@@ -111,8 +115,8 @@ public class AareGuruIntegrationService implements InitializingBean {
   }
 
   private static class P {
-    private static Instant parseInstant(String unixTimestamp) {
-      return Instant.ofEpochSecond(Long.parseLong(unixTimestamp));
+    private static OffsetDateTime parseTimestamp(String unixTimestamp) {
+      return OffsetDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(unixTimestamp)), AARE_LOCAL_TIME_ZONE);
     }
 
     private static float parseFloat(String number) {
