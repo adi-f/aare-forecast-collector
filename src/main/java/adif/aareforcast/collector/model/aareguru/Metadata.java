@@ -1,4 +1,4 @@
-package adif.aareforcast.collector.model;
+package adif.aareforcast.collector.model.aareguru;
 
 import lombok.Builder;
 import lombok.Value;

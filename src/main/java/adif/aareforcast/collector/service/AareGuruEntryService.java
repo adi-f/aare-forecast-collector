@@ -2,9 +2,9 @@ package adif.aareforcast.collector.service;
 
 import adif.aareforcast.collector.dao.AareGuruEntryRepository;
 import adif.aareforcast.collector.dao.AareGuruIntegrationService;
-import adif.aareforcast.collector.model.AareGuruEntry;
-import adif.aareforcast.collector.model.Location;
-import adif.aareforcast.collector.model.Metadata;
+import adif.aareforcast.collector.model.aareguru.AareGuruEntry;
+import adif.aareforcast.collector.model.aareguru.Location;
+import adif.aareforcast.collector.model.aareguru.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

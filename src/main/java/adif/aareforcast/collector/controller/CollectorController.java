@@ -1,9 +1,9 @@
 package adif.aareforcast.collector.controller;
 
 import adif.aareforcast.collector.dao.AareGuruIntegrationService;
-import adif.aareforcast.collector.model.AareGuruEntry;
-import adif.aareforcast.collector.model.Location;
-import adif.aareforcast.collector.model.Metadata;
+import adif.aareforcast.collector.model.aareguru.AareGuruEntry;
+import adif.aareforcast.collector.model.aareguru.Location;
+import adif.aareforcast.collector.model.aareguru.Metadata;
 import adif.aareforcast.collector.service.AareGuruEntryService;
 import adif.aareforcast.collector.service.AareGuruEntryService.PollingStatus;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package adif.aareforcast.collector.dao;
 
-import adif.aareforcast.collector.model.AareGuruEntry;
-import adif.aareforcast.collector.model.AareGuruEntry.AareGuruEntryBuilder;
-import adif.aareforcast.collector.model.Location;
-import adif.aareforcast.collector.model.WeatherSymbol;
+import adif.aareforcast.collector.model.aareguru.AareGuruEntry;
+import adif.aareforcast.collector.model.aareguru.AareGuruEntry.AareGuruEntryBuilder;
+import adif.aareforcast.collector.model.aareguru.Location;
+import adif.aareforcast.collector.model.aareguru.WeatherSymbol;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;

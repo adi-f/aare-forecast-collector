@@ -1,7 +1,7 @@
 package adif.aareforcast.collector.dao;
 
-import adif.aareforcast.collector.model.AareGuruEntry;
-import adif.aareforcast.collector.model.Location;
+import adif.aareforcast.collector.model.aareguru.AareGuruEntry;
+import adif.aareforcast.collector.model.aareguru.Location;
 import java.time.OffsetDateTime;
 import org.springframework.data.repository.CrudRepository;
 

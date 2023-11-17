@@ -1,4 +1,4 @@
-package adif.aareforcast.collector.model;
+package adif.aareforcast.collector.model.aareguru;
 
 // https://meteotest.ch/en/weather-api/wetter-api-dokumentation/weather-symbols
 public enum WeatherSymbol {
