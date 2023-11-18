@@ -43,7 +43,7 @@ public class AareGuruIntegrationService implements InitializingBean {
     fields.add(field("aare.forecast2h", P::parseFloat, AareGuruEntryBuilder::forecast2hWaterTemperatureCelsius)); // forecast+2h water temperature in °C; floating-point
     fields.add(field("weather.current.timestamp", P::parseTimestamp, AareGuruEntryBuilder::timestampCurrentWeather)); // timestamp UTC in seconds
     fields.add(field("weather.current.tt", P::parseFloat, AareGuruEntryBuilder::currentAirTemperatureCelsius)); // current air temperature °C; floating-point
-    fields.add(field("weather.current.rrreal", P::parseFloat, AareGuruEntryBuilder::currentRainfallMmPer10nin)); // current rainfall, mm/10min; floating-point
+    fields.add(field("weather.current.rrreal", P::parseFloat, AareGuruEntryBuilder::currentRainfallMmPer10min)); // current rainfall, mm/10min; floating-point
 
     for(int i = 0; i < NUMBER_OF_FORCAST_DAYS; i++) { // 0 = tomorrow
       if(i != 0) throw new RuntimeException("please refactor the DTO-setters below, they are not made yet for looping");
@@ -51,7 +51,7 @@ public class AareGuruIntegrationService implements InitializingBean {
       fields.add(field("weather.forecast." + i + ".symt", P::parseWeatherSymbol, AareGuruEntryBuilder::weatherForecastTomorrowSymbol)); // weather symbol; integer https://meteotest.ch/en/weather-api/wetter-api-dokumentation/weather-symbols
       fields.add(field("weather.forecast." + i + ".tx", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowDayMaxAirTemperatureCelsius)); // max. air temperature of day °C; integer
       fields.add(field("weather.forecast." + i + ".tn", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowDayMinAirTemperatureCelsius)); // min. air temperature of day °C; integer
-      fields.add(field("weather.forecast." + i + ".rr", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowRainfallMmPer10nin)); // rainfall, mm/10min; integer
+      fields.add(field("weather.forecast." + i + ".rr", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowRainfallMmPer10min)); // rainfall, mm/10min; integer
       fields.add(field("weather.forecast." + i + ".rrisk", P::parseInteger, AareGuruEntryBuilder::weatherForecastTomorrowRainRiskPercentage)); // probability of rain; percentage; integer
     }
     FIELDS_TO_READ = Collections.unmodifiableList(fields);

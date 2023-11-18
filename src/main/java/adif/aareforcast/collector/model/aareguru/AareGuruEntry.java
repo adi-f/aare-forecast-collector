@@ -18,13 +18,13 @@ public class AareGuruEntry {
   Float forecast2hWaterTemperatureCelsius;
   OffsetDateTime timestampCurrentWeather;
   Float currentAirTemperatureCelsius;
-  Float currentRainfallMmPer10nin; // mm/10min
+  Float currentRainfallMmPer10min; // mm/10min
 
   OffsetDateTime weatherForecastTomorrowTimestamp;
   WeatherSymbol weatherForecastTomorrowSymbol;
   Integer weatherForecastTomorrowDayMaxAirTemperatureCelsius;
   Integer weatherForecastTomorrowDayMinAirTemperatureCelsius;
-  Integer weatherForecastTomorrowRainfallMmPer10nin; // mm/10min
+  Integer weatherForecastTomorrowRainfallMmPer10min; // mm/10min
   Integer weatherForecastTomorrowRainRiskPercentage;
 
 }
