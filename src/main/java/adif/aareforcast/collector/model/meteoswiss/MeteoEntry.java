@@ -15,9 +15,8 @@ public class MeteoEntry {
   OffsetDateTime timestamp;
   Float airTemperatureCelcius;
   Float rainMm;
-  Float sunIntensityWattPerQuareMeter; // seems to be an integer
+  Float sunIntensityWattPerSquareMeter; // seems to be an integer
   Float humidityPercent;
-  Integer windDirection360Degree;
-  Float windSpeendKmh;
-
+  Float windDirection360Degree; // seems to be an integer
+  Float windSpeedKmh;
 }

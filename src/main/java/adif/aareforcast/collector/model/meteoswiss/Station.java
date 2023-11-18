@@ -18,7 +18,7 @@ public enum Station {
   BERN("BER"),
   MUEHLEBERG("MUB"),
   CRESSIER("CRM"),
-  Grenchen("GRE");
+  GRENCHEN("GRE");
 
   private final static Map<String, Station> ID_ENUM_MAPPER = new HashMap<>();
   static {

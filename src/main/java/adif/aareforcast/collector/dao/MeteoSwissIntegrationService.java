@@ -18,22 +18,40 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-public class MeteoSwissIntegrationService {
+@Service
+public class MeteoSwissIntegrationService implements InitializingBean {
 
   // General: https://opendata.swiss/de/dataset/automatische-wetterstationen-aktuelle-messwerte
   // Description (ZIP): https://data.geo.admin.ch/ch.meteoschweiz.messwerte-aktuell/data.zip
   // CSV Column description: https://data.geo.admin.ch/ch.meteoschweiz.messwerte-aktuell/info/VQHA80_de.txt
   // Stations description: https://data.geo.admin.ch/ch.meteoschweiz.messnetz-automatisch/ch.meteoschweiz.messnetz-automatisch_de.csv
   // Nice UI: https://www.meteoschweiz.admin.ch/service-und-publikationen/applikationen/messwerte-und-messnetze.html#param=messnetz-automatisch&lang=de&station=KIS&chart=hour&table=false
-  private static final String URL = "https://data.geo.admin.ch/ch.meteoschweiz.messwerte-aktuell/VQHA80.csv";
 
   private static final String NO_VALUE = "-";
   private static final String CSV_SEPARATOR = ";";
-  private static final DateTimeFormatter METEO_SWISS_FORMAT = DateTimeFormatter.ofPattern("uuuuMMddHHmmss");
+  private static final DateTimeFormatter METEO_SWISS_FORMAT = DateTimeFormatter.ofPattern("uuuuMMddHHmm");
   private static final ZoneId METEO_SWISS_TIME_ZONE = ZoneId.of("Europe/Zurich");
 
+  @Value("${aareForcasrCollector.meteoSwissUrl}")
+  private String url;
 
+  @Autowired
+  private RestTemplateBuilder restTemplateBuilder;
+
+  private RestTemplate meteoSwissRestTemplate;
+
+
+  @Override
+  public void afterPropertiesSet() {
+    meteoSwissRestTemplate = restTemplateBuilder.build();
+  }
 
   public List<MeteoEntry> readMeteo(List<Station> filter) {
     String rawCsv = readMeteoRawCsv();
@@ -53,7 +71,7 @@ public class MeteoSwissIntegrationService {
     return Collections.unmodifiableList(result);
   }
   private String readMeteoRawCsv() {
-    return ""; // TODO
+    return meteoSwissRestTemplate.getForObject(url, String.class);
   }
 
   private List<String> splitLine(String line) {
@@ -95,9 +113,9 @@ public class MeteoSwissIntegrationService {
     Optional<Float> readFloat(Column column, List<String> row) {
       return readString(column, row).map(Float::parseFloat);
     }
-    Optional<Integer> readInteger(Column column, List<String> row) {
-      return readString(column, row).map(Integer::parseInt);
-    }
+//    Optional<Integer> readInteger(Column column, List<String> row) {
+//      return readString(column, row).map(Integer::parseInt);
+//    }
 
     <T> T readFirstPresent(Column columnPreferred, Column columnFallback, BiFunction<Column, List<String>, Optional<T>> readMapper, List<String> row) {
       return readMapper.apply(columnPreferred, row).orElseGet(() -> readMapper.apply(columnFallback, row).orElse(null));
@@ -110,10 +128,10 @@ public class MeteoSwissIntegrationService {
           .timestamp(readTimestamp(Column.TIMESTAMP, csvLine).orElse(null))
           .airTemperatureCelcius(readFirstPresent(Column.AIR_TEMPERATURE1, Column.AIR_TEMPERATURE2, this::readFloat, csvLine))
           .rainMm(readFloat(Column.RAIN, csvLine).orElse(null))
-          .sunIntensityWattPerQuareMeter(readFloat(Column.SUN, csvLine).orElse(null))
+          .sunIntensityWattPerSquareMeter(readFloat(Column.SUN, csvLine).orElse(null))
           .humidityPercent(readFirstPresent(Column.HUMIDITY1, Column.HUMIDITY2, this::readFloat, csvLine))
-          .windDirection360Degree(readFirstPresent(Column.WIND_DIRECTION1, Column.WIND_DIRECTION2, this::readInteger, csvLine))
-          .windSpeendKmh(readFirstPresent(Column.WIND_SPEED1, Column.WIND_SPEED2, this::readFloat, csvLine))
+          .windDirection360Degree(readFirstPresent(Column.WIND_DIRECTION1, Column.WIND_DIRECTION2, this::readFloat, csvLine))
+          .windSpeedKmh(readFirstPresent(Column.WIND_SPEED1, Column.WIND_SPEED2, this::readFloat, csvLine))
           .build();
     }
   }

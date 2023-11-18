@@ -1,4 +1,4 @@
-package adif.aareforcast.collector.model.aareguru;
+package adif.aareforcast.collector.model;
 
 import lombok.Builder;
 import lombok.Value;
@@ -7,4 +7,5 @@ import lombok.Value;
 @Builder
 public class Metadata {
   long numberOfAareGuruEntries;
+  long numberOfMeteoEntries;
 }
