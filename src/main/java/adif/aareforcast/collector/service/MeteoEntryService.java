@@ -26,14 +26,26 @@ public class MeteoEntryService {
   }
 
   @Transactional
-  public PollingStatus poll(Station station) {
-    MeteoEntry newEntry = meteoSwissIntegrationService.readMeteo(List.of(station)).get(0);
-    boolean alreadyPresent = repository.countByTimestampAndStation(newEntry.getTimestamp(), newEntry.getStation()) > 0L;
-    if(alreadyPresent) {
+  public PollingStatus poll(List<Station> stations) {
+    List<MeteoEntry> newEntries = meteoSwissIntegrationService.readMeteo(stations);
+    boolean hasAlreadyPresent = false;
+    boolean hasNew = false;
+    for(MeteoEntry newEntry : newEntries) {
+      boolean alreadyPresent = repository.countByTimestampAndStation(newEntry.getTimestamp(), newEntry.getStation()) > 0L;
+      hasAlreadyPresent |= alreadyPresent;
+      hasNew |= !alreadyPresent;
+
+      if(!alreadyPresent) {
+        repository.save(newEntry);
+      }
+    }
+
+    if(hasNew && !hasAlreadyPresent) {
+      return PollingStatus.NEW;
+    } else if(!hasNew && hasAlreadyPresent) {
       return PollingStatus.ALREADY_PRESENT;
     } else {
-      repository.save(newEntry);
-      return PollingStatus.NEW;
+      return PollingStatus.MIXED;
     }
   }
 }

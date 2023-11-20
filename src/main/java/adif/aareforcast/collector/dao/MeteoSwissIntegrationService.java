@@ -39,7 +39,7 @@ public class MeteoSwissIntegrationService implements InitializingBean {
   private static final DateTimeFormatter METEO_SWISS_FORMAT = DateTimeFormatter.ofPattern("uuuuMMddHHmm");
   private static final ZoneId METEO_SWISS_TIME_ZONE = ZoneId.of("Europe/Zurich");
 
-  @Value("${aareForcasrCollector.meteoSwissUrl}")
+  @Value("${aareForcastCollector.meteoSwissUrl}")
   private String url;
 
   @Autowired

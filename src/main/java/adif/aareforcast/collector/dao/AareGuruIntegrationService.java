@@ -58,7 +58,7 @@ public class AareGuruIntegrationService implements InitializingBean {
     FIELDS_QUERY = FIELDS_TO_READ.stream().map(Field::getFielName).collect(Collectors.joining(","));
   }
 
-  @Value("${aareForcasrCollector.aareGuruBaseUrl}")
+  @Value("${aareForcastCollector.aareGuruBaseUrl}")
   private String baseUrl;
 
   @Autowired
