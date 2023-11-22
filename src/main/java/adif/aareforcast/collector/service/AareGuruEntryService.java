@@ -18,9 +18,11 @@ public class AareGuruEntryService {
 
   @Autowired
   private AareGuruEntryRepository repository;
+
   public Metadata readMetadata() {
     return Metadata.builder()
         .numberOfAareGuruEntries(repository.count())
+        .latestAareGuruEntriy(repository.findTopByOrderByTimestampDesc().map(AareGuruEntry::getTimestamp).orElse(null))
         .build();
   }
 

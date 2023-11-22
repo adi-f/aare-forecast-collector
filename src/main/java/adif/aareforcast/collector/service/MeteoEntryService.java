@@ -19,9 +19,11 @@ public class MeteoEntryService {
 
   @Autowired
   private MeteoEntryRepository repository;
+
   public Metadata readMetadata() {
     return Metadata.builder()
         .numberOfMeteoEntries(repository.count())
+        .latestMeteoSwissEntriy(repository.findTopByOrderByTimestampDesc().map(MeteoEntry::getTimestamp).orElse(null))
         .build();
   }
 

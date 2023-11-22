@@ -9,6 +9,7 @@ import adif.aareforcast.collector.model.Metadata;
 import adif.aareforcast.collector.model.meteoswiss.MeteoEntry;
 import adif.aareforcast.collector.model.meteoswiss.Station;
 import adif.aareforcast.collector.service.AareGuruEntryService;
+import adif.aareforcast.collector.service.ExportService;
 import adif.aareforcast.collector.service.MeteoEntryService;
 import adif.aareforcast.collector.service.PollingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,6 +42,9 @@ public class CollectorController {
 
   @Autowired
   private PollingService pollingService;
+
+  @Autowired
+  private ExportService exportService;
 
   @GetMapping(value = "ping", produces = MediaType.TEXT_PLAIN_VALUE)
   @Operation(
@@ -102,6 +106,6 @@ public class CollectorController {
       description = "Read metadata about persisted data"
   )
   public Metadata readMetadata() {
-    return aareGuruEntryService.readMetadata();
+    return exportService.readMetadata();
   }
 }
