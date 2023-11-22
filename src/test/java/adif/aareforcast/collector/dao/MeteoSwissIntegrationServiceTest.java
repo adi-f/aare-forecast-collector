@@ -2,6 +2,8 @@ package adif.aareforcast.collector.dao;
 
 import static adif.aareforcast.collector.Helper.readRessource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import adif.aareforcast.collector.model.meteoswiss.MeteoEntry;
@@ -26,8 +28,8 @@ class MeteoSwissIntegrationServiceTest {
   private MeteoSwissIntegrationService meteoSwissIntegrationService;
 
   @BeforeEach
-  void setUp() {
-    when(meteoSwissRestTemplate.getForObject("", String.class))
+  void setUp() throws IllegalAccessException {
+    when(meteoSwissRestTemplate.getForObject((String)any(), eq(String.class)))
         .thenReturn(readRessource("data/VQHA80_202311172120.csv"));
   }
 
