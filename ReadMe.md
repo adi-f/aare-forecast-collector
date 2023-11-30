@@ -7,4 +7,7 @@ Start:
 
 ## Deployment
 ### Azure
-Try this: https://learn.microsoft.com/en-us/azure/developer/java/spring-framework/configure-spring-data-jdbc-with-azure-sql-server
+* Create application with DB: https://learn.microsoft.com/en-us/azure/developer/java/spring-framework/configure-spring-data-jdbc-with-azure-sql-server
+* Add Entra-ID Authentication: https://learn.microsoft.com/de-de/azure/developer/java/spring-framework/secure-your-restful-api-using-spring-cloud-azure
+* https://learn.microsoft.com/en-us/azure/developer/java/spring-framework/configure-spring-boot-starter-java-app-with-azure-active-directory
+* Add public endpoint: https://learn.microsoft.com/en-us/azure/spring-apps/how-to-access-app-from-internet-virtual-network?tabs=azure-portal
