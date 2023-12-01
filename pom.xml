@@ -36,31 +36,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency>
 
-		<!-- Azure / Microsoft -->
+		<!-- Database -->
 		<dependency>
-			<groupId>com.azure.spring</groupId>
-			<artifactId>spring-cloud-azure-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.azure.spring</groupId>
-			<artifactId>spring-cloud-azure-starter-active-directory</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-
-		<!-- 3rd -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
@@ -69,6 +54,13 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-sqlserver</artifactId>
+		</dependency>
+
+		<!-- 3rd -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- Test -->
@@ -121,4 +113,23 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>azure</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-oauth2-client</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>com.azure.spring</groupId>
+					<artifactId>spring-cloud-azure-starter</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>com.azure.spring</groupId>
+					<artifactId>spring-cloud-azure-starter-active-directory</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 </project>

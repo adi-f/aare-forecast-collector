@@ -2,10 +2,10 @@ package adif.aareforecast.collector.controller;
 
 import adif.aareforecast.collector.dao.AareGuruIntegrationService;
 import adif.aareforecast.collector.dao.MeteoSwissIntegrationService;
+import adif.aareforecast.collector.model.Metadata;
 import adif.aareforecast.collector.model.PollingStatus;
 import adif.aareforecast.collector.model.aareguru.AareGuruEntry;
 import adif.aareforecast.collector.model.aareguru.Location;
-import adif.aareforecast.collector.model.Metadata;
 import adif.aareforecast.collector.model.meteoswiss.MeteoEntry;
 import adif.aareforecast.collector.model.meteoswiss.Station;
 import adif.aareforecast.collector.service.AareGuruEntryService;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/")
 @Tag(name = "Collecting Data")
+// @PreAuthorize("hasAuthority('aare-foracast-role')")
 public class CollectorController {
 
   @Autowired
